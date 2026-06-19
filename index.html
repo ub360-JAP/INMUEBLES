@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Acceso privado | C25C - Galpón</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #64748b;
+      --primary: #1d4ed8;
+      --primary-dark: #1e40af;
+      --danger: #dc2626;
+      --border: #dbe3ef;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.35), transparent 35%),
+        linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #020617 100%);
+      color: var(--text);
+    }
+
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card);
+      border-radius: 22px;
+      padding: 32px;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+    }
+
+    .badge {
+      display: inline-block;
+      margin-bottom: 16px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #e0ecff;
+      color: #1d4ed8;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      line-height: 1.15;
+    }
+
+    p {
+      margin: 0 0 24px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .field-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    input {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.14);
+    }
+
+    button {
+      min-height: 48px;
+      padding: 12px 18px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--primary);
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+    }
+
+    .error {
+      display: none;
+      margin-top: 12px;
+      color: var(--danger);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .tour-screen {
+      display: none;
+      min-height: 100vh;
+      background: #020617;
+    }
+
+    .tour-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      background: #0f172a;
+      color: white;
+    }
+
+    .tour-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .logout {
+      min-height: auto;
+      padding: 9px 12px;
+      background: rgba(255, 255, 255, 0.12);
+      font-size: 13px;
+    }
+
+    .logout:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .iframe-wrap {
+      width: 100%;
+      height: calc(100vh - 56px);
+      position: relative;
+    }
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #000;
+    }
+
+    .fallback-link {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      z-index: 2;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.86);
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .fallback-link:hover {
+      background: rgba(29, 78, 216, 0.95);
+    }
+
+    @media (max-width: 520px) {
+      .login-card {
+        padding: 24px;
+      }
+
+      .field-row {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="login-screen" id="loginScreen">
+    <section class="login-card">
+      <span class="badge">Acceso restringido</span>
+      <h1>C25C - Galpón</h1>
+      <p>Ingrese la clave autorizada para visualizar el recorrido virtual.</p>
+
+      <form id="accessForm">
+        <label for="password">Clave de acceso</label>
+        <div class="field-row">
+          <input id="password" type="password" autocomplete="off" placeholder="Escriba la clave" />
+          <button type="submit">Ingresar</button>
+        </div>
+        <div class="error" id="errorMessage">Clave incorrecta. Intente nuevamente.</div>
+      </form>
+    </section>
+  </main>
+
+  <main class="tour-screen" id="tourScreen">
+    <header class="tour-header">
+      <div class="tour-title">C25C - Galpón</div>
+      <button class="logout" type="button" id="logoutButton">Salir</button>
+    </header>
+
+    <div class="iframe-wrap">
+      <iframe
+        id="tour-embeded"
+        name="C25C - Galpon"
+        title="C25C - Galpón"
+        data-src="https://tour.panoee.net/iframe/6a3419db7fd6bf833ca74982"
+        frameborder="0"
+        scrolling="no"
+        allowvr="yes"
+        allow="vr; xr; accelerometer; gyroscope; autoplay;"
+        allowfullscreen="false"
+        webkitallowfullscreen="false"
+        mozallowfullscreen="false"
+        loading="eager">
+      </iframe>
+      <a class="fallback-link" href="https://tour.panoee.net/6a3419db7fd6bf833ca74982" target="_blank" rel="noopener">
+        Abrir recorrido
+      </a>
+    </div>
+  </main>
+
+  <script>
+    const CLAVE_ACCESO = "Urbis123";
+    const accessForm = document.getElementById("accessForm");
+    const passwordInput = document.getElementById("password");
+    const errorMessage = document.getElementById("errorMessage");
+    const loginScreen = document.getElementById("loginScreen");
+    const tourScreen = document.getElementById("tourScreen");
+    const iframe = document.getElementById("tour-embeded");
+    const logoutButton = document.getElementById("logoutButton");
+
+    accessForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      if (passwordInput.value.trim() === CLAVE_ACCESO) {
+        errorMessage.style.display = "none";
+        loginScreen.style.display = "none";
+        tourScreen.style.display = "block";
+
+        if (!iframe.src) {
+          iframe.src = iframe.dataset.src;
+        }
+      } else {
+        errorMessage.style.display = "block";
+        passwordInput.value = "";
+        passwordInput.focus();
+      }
+    });
+
+    logoutButton.addEventListener("click", function () {
+      tourScreen.style.display = "none";
+      loginScreen.style.display = "flex";
+      passwordInput.value = "";
+      passwordInput.focus();
+    });
+
+    var pano_iframe_name = "tour-embeded";
+    window.addEventListener("devicemotion", function (e) {
+      var panoIframe = document.getElementById(pano_iframe_name);
+      if (panoIframe && panoIframe.contentWindow) {
+        panoIframe.contentWindow.postMessage({
+          type: "devicemotion",
+          deviceMotionEvent: {
+            acceleration: {
+              x: e.acceleration ? e.acceleration.x : null,
+              y: e.acceleration ? e.acceleration.y : null,
+              z: e.acceleration ? e.acceleration.z : null
+            },
+            accelerationIncludingGravity: {
+              x: e.accelerationIncludingGravity ? e.accelerationIncludingGravity.x : null,
+              y: e.accelerationIncludingGravity ? e.accelerationIncludingGravity.y : null,
+              z: e.accelerationIncludingGravity ? e.accelerationIncludingGravity.z : null
+            },
+            rotationRate: {
+              alpha: e.rotationRate ? e.rotationRate.alpha : null,
+              beta: e.rotationRate ? e.rotationRate.beta : null,
+              gamma: e.rotationRate ? e.rotationRate.gamma : null
+            },
+            interval: e.interval,
+            timeStamp: e.timeStamp
+          }
+        }, "*");
+      }
+    });
+  </script>
+</body>
+</html>
