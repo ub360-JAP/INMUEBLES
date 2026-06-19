@@ -147,7 +147,7 @@
 
     .projects-card {
       width: 100%;
-      max-width: 560px;
+      max-width: 720px;
       background: var(--card);
       border-radius: 22px;
       padding: 32px;
@@ -178,6 +178,18 @@
       border-color: var(--primary);
       background: #e0ecff;
       color: var(--primary-dark);
+    }
+
+    .project-name {
+      display: block;
+    }
+
+    .project-code {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
     }
 
     .tour-header {
@@ -270,10 +282,7 @@
       <h1>INMUEBLES UB</h1>
       <p>Seleccione el proyecto que desea visualizar.</p>
 
-      <div class="project-list">
-        <button class="project-button" type="button" data-project="UB6B123">PROYECTO GALPON</button>
-        <button class="project-button" type="button" data-project="UB7B123">Madidi - Departamento 7B</button>
-        <button class="project-button" type="button" data-project="UBL23C20">CEC - Local 2-2 Subsuelo</button>
+      <div class="project-list" id="projectList">
       </div>
     </section>
   </main>
@@ -306,17 +315,37 @@
     const CLAVE_ADMIN = "ADMINJC";
 
     const proyectos = {
-      "UB6B123": {
-        nombre: "PROYECTO GALPON",
-        link: "https://tour.panoee.net/iframe/6a3419db7fd6bf833ca74982"
-      },
       "UB7B123": {
-        nombre: "Madidi - Departamento 7B",
+        nombre: "Edif. Madidi - Departamento 7B",
         link: "https://tour.panoee.net/iframe/6a3055bdd3b4412c7ce463cf"
       },
-      "UBL23C20": {
-        nombre: "CEC - Local 2-2 Subsuelo",
+      "UB7D123": {
+        nombre: "Edif. Madidi - Departamento 7D",
+        link: "https://tour.panoee.net/iframe/6a2887d7c640447d070ee839"
+      },
+      "UB7A123": {
+        nombre: "Edif. Madidi - Departamento 7A",
+        link: "https://tour.panoee.net/iframe/6a2abef62831000b3274fba3"
+      },
+      "UB6B123": {
+        nombre: "Edif. Madidi - Departamento 6B",
+        link: "https://tour.panoee.net/iframe/6a340f6cd0e5ab5c7801fc9a"
+      },
+      "UBPA123": {
+        nombre: "Edif. Madidi - Parrillero A y B",
+        link: "https://tour.panoee.net/iframe/6a2ae42c9c1006e37aaa1684"
+      },
+      "UBC22L23": {
+        nombre: "Edif. CEC - Local 2 y 3 Subsuelo",
         link: "https://tour.panoee.net/iframe/6a2aa9c7283100fe6174f8a5"
+      },
+      "UBC20LA": {
+        nombre: "Edif. Union - Subsuelo A",
+        link: "https://tour.panoee.net/iframe/6a2adef0283100161f7500bc"
+      },
+      "UBC25GA": {
+        nombre: "C25C - Galpón",
+        link: "https://tour.panoee.net/iframe/6a3419db7fd6bf833ca74982"
       }
     };
 
@@ -326,10 +355,31 @@
     const successMessage = document.getElementById("successMessage");
     const loginScreen = document.getElementById("loginScreen");
     const projectsScreen = document.getElementById("projectsScreen");
+    const projectList = document.getElementById("projectList");
     const tourScreen = document.getElementById("tourScreen");
     const tourFrame = document.getElementById("tour-embeded");
     const homeButton = document.getElementById("homeButton");
-    const projectButtons = document.querySelectorAll(".project-button");
+
+    function renderizarListaProyectos() {
+      projectList.innerHTML = "";
+
+      Object.entries(proyectos).forEach(function ([clave, proyecto]) {
+        const button = document.createElement("button");
+        button.className = "project-button";
+        button.type = "button";
+        button.dataset.project = clave;
+        button.innerHTML = `
+          <span class="project-name">${proyecto.nombre}</span>
+          <span class="project-code">Clave: ${clave}</span>
+        `;
+
+        button.addEventListener("click", function () {
+          mostrarRecorrido(proyecto);
+        });
+
+        projectList.appendChild(button);
+      });
+    }
 
     function mostrarInicio() {
       tourFrame.removeAttribute("src");
@@ -344,6 +394,7 @@
     }
 
     function mostrarListaProyectos() {
+      renderizarListaProyectos();
       loginScreen.style.display = "none";
       tourScreen.style.display = "none";
       projectsScreen.style.display = "flex";
@@ -385,16 +436,6 @@
         passwordInput.value = "";
         passwordInput.focus();
       }
-    });
-
-    projectButtons.forEach(function (button) {
-      button.addEventListener("click", function () {
-        const claveProyecto = button.dataset.project;
-        const proyecto = proyectos[claveProyecto];
-        if (proyecto) {
-          mostrarRecorrido(proyecto);
-        }
-      });
     });
 
     homeButton.addEventListener("click", mostrarInicio);
