@@ -229,11 +229,12 @@
 
     <div class="iframe-wrap">
       <iframe
-        id="tourFrame"
-        title="Recorrido virtual"
+        id="tour-embeded"
+        name="C25C - Galpon"
         frameborder="0"
+        width="100%"
+        height="400px"
         scrolling="no"
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-pointer-lock allow-presentation"
         allowvr="yes"
         allow="vr; xr; accelerometer; gyroscope; autoplay;"
         allowfullscreen="false"
@@ -257,7 +258,7 @@
     const successMessage = document.getElementById("successMessage");
     const loginScreen = document.getElementById("loginScreen");
     const tourScreen = document.getElementById("tourScreen");
-    const tourFrame = document.getElementById("tourFrame");
+    const tourFrame = document.getElementById("tour-embeded");
     const homeButton = document.getElementById("homeButton");
 
     function mostrarInicio() {
@@ -305,11 +306,11 @@
       mostrarInicio();
     });
 
-    var pano_iframe_name = "tourFrame";
+    var pano_iframe_name = "tour-embeded";
     window.addEventListener("devicemotion", function (e) {
-      var panoIframe = document.getElementById(pano_iframe_name);
-      if (panoIframe && panoIframe.contentWindow) {
-        panoIframe.contentWindow.postMessage({
+      var iframe = document.getElementById(pano_iframe_name);
+      if (iframe) {
+        iframe.contentWindow.postMessage({
           type: "devicemotion",
           deviceMotionEvent: {
             acceleration: {
