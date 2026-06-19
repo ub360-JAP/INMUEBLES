@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>Acceso privado | C25C - Galpón</title>
+  <title>INMUEBLES UB</title>
   <style>
     :root {
       --bg: #0f172a;
@@ -123,68 +123,12 @@
       font-weight: 700;
     }
 
-    .tour-screen {
+    .success {
       display: none;
-      min-height: 100vh;
-      background: #020617;
-    }
-
-    .tour-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 18px;
-      background: #0f172a;
-      color: white;
-    }
-
-    .tour-title {
-      font-size: 16px;
+      margin-top: 12px;
+      color: #15803d;
+      font-size: 14px;
       font-weight: 700;
-    }
-
-    .logout {
-      min-height: auto;
-      padding: 9px 12px;
-      background: rgba(255, 255, 255, 0.12);
-      font-size: 13px;
-    }
-
-    .logout:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .iframe-wrap {
-      width: 100%;
-      height: calc(100vh - 56px);
-      position: relative;
-    }
-
-    iframe {
-      display: block;
-      width: 100%;
-      height: 100%;
-      border: 0;
-      background: #000;
-    }
-
-    .fallback-link {
-      position: absolute;
-      right: 16px;
-      bottom: 16px;
-      z-index: 2;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.86);
-      color: white;
-      font-size: 13px;
-      font-weight: 700;
-      text-decoration: none;
-    }
-
-    .fallback-link:hover {
-      background: rgba(29, 78, 216, 0.95);
     }
 
     @media (max-width: 520px) {
@@ -206,8 +150,8 @@
   <main class="login-screen" id="loginScreen">
     <section class="login-card">
       <span class="badge">Acceso restringido</span>
-      <h1>C25C - Galpón</h1>
-      <p>Ingrese la clave autorizada para visualizar el recorrido virtual.</p>
+      <h1>INMUEBLES UB</h1>
+      <p>Ingrese la clave autorizada para acceder al recorrido virtual correspondiente.</p>
 
       <form id="accessForm">
         <label for="password">Clave de acceso</label>
@@ -215,99 +159,42 @@
           <input id="password" type="password" autocomplete="off" placeholder="Escriba la clave" />
           <button type="submit">Ingresar</button>
         </div>
-        <div class="error" id="errorMessage">Clave incorrecta. Intente nuevamente.</div>
+        <div class="error" id="errorMessage">Acceso denegado. Intente nuevamente.</div>
+        <div class="success" id="successMessage">Acceso autorizado. Redirigiendo...</div>
       </form>
     </section>
   </main>
 
-  <main class="tour-screen" id="tourScreen">
-    <header class="tour-header">
-      <div class="tour-title">C25C - Galpón</div>
-      <button class="logout" type="button" id="logoutButton">Salir</button>
-    </header>
-
-    <div class="iframe-wrap">
-      <iframe
-        id="tour-embeded"
-        name="C25C - Galpon"
-        title="C25C - Galpón"
-        data-src="https://tour.panoee.net/iframe/6a3419db7fd6bf833ca74982"
-        frameborder="0"
-        scrolling="no"
-        allowvr="yes"
-        allow="vr; xr; accelerometer; gyroscope; autoplay;"
-        allowfullscreen="false"
-        webkitallowfullscreen="false"
-        mozallowfullscreen="false"
-        loading="eager">
-      </iframe>
-      <a class="fallback-link" href="https://tour.panoee.net/6a3419db7fd6bf833ca74982" target="_blank" rel="noopener">
-        Abrir recorrido
-      </a>
-    </div>
-  </main>
-
   <script>
-    const CLAVE_ACCESO = "Urbis123";
+    const recorridos = {
+      "UB6B123": "https://tour.panoee.net/6a3419db7fd6bf833ca74982",
+      "UB7B123": "https://tour.panoee.net/6a3055bdd3b4412c7ce463cf",
+      "UBL23C20": "https://tour.panoee.net/6a2aa9c7283100fe6174f8a5"
+    };
+
     const accessForm = document.getElementById("accessForm");
     const passwordInput = document.getElementById("password");
     const errorMessage = document.getElementById("errorMessage");
-    const loginScreen = document.getElementById("loginScreen");
-    const tourScreen = document.getElementById("tourScreen");
-    const iframe = document.getElementById("tour-embeded");
-    const logoutButton = document.getElementById("logoutButton");
+    const successMessage = document.getElementById("successMessage");
 
     accessForm.addEventListener("submit", function (event) {
       event.preventDefault();
 
-      if (passwordInput.value.trim() === CLAVE_ACCESO) {
-        errorMessage.style.display = "none";
-        loginScreen.style.display = "none";
-        tourScreen.style.display = "block";
+      const claveIngresada = passwordInput.value.trim();
+      const linkRecorrido = recorridos[claveIngresada];
 
-        if (!iframe.src) {
-          iframe.src = iframe.dataset.src;
-        }
+      if (linkRecorrido) {
+        errorMessage.style.display = "none";
+        successMessage.style.display = "block";
+
+        setTimeout(function () {
+          window.location.href = linkRecorrido;
+        }, 600);
       } else {
+        successMessage.style.display = "none";
         errorMessage.style.display = "block";
         passwordInput.value = "";
         passwordInput.focus();
-      }
-    });
-
-    logoutButton.addEventListener("click", function () {
-      tourScreen.style.display = "none";
-      loginScreen.style.display = "flex";
-      passwordInput.value = "";
-      passwordInput.focus();
-    });
-
-    var pano_iframe_name = "tour-embeded";
-    window.addEventListener("devicemotion", function (e) {
-      var panoIframe = document.getElementById(pano_iframe_name);
-      if (panoIframe && panoIframe.contentWindow) {
-        panoIframe.contentWindow.postMessage({
-          type: "devicemotion",
-          deviceMotionEvent: {
-            acceleration: {
-              x: e.acceleration ? e.acceleration.x : null,
-              y: e.acceleration ? e.acceleration.y : null,
-              z: e.acceleration ? e.acceleration.z : null
-            },
-            accelerationIncludingGravity: {
-              x: e.accelerationIncludingGravity ? e.accelerationIncludingGravity.x : null,
-              y: e.accelerationIncludingGravity ? e.accelerationIncludingGravity.y : null,
-              z: e.accelerationIncludingGravity ? e.accelerationIncludingGravity.z : null
-            },
-            rotationRate: {
-              alpha: e.rotationRate ? e.rotationRate.alpha : null,
-              beta: e.rotationRate ? e.rotationRate.beta : null,
-              gamma: e.rotationRate ? e.rotationRate.gamma : null
-            },
-            interval: e.interval,
-            timeStamp: e.timeStamp
-          }
-        }, "*");
       }
     });
   </script>
