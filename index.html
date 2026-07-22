@@ -290,7 +290,7 @@
   <main class="tour-screen" id="tourScreen">
     <header class="tour-header">
       <div class="tour-brand">INMUEBLES UB</div>
-      <button class="home-button" type="button" id="homeButton">PÁGINA DE INICIO</button>
+      <button class="home-button" type="button" id="homeButton">MENÚ PRINCIPAL</button>
     </header>
 
     <div class="iframe-wrap">
@@ -346,6 +346,14 @@
       "UBC25GA": {
         nombre: "C25C - Galpón",
         link: "https://tour.panoee.net/iframe/6a3419db7fd6bf833ca74982"
+      },
+      "UBKAN26": {
+        nombre: "Poryecto Kantutas",
+        link: "https://tour.panoee.net/iframe/6a5b9150fee51873df7dd7fd"
+      },
+      "UBCGS26": {
+        nombre: "C22 CEC CGS",
+        link: "https://tour.panoee.net/iframe/6a60d906d175b08983c203ca"
       }
     };
 
@@ -438,7 +446,17 @@
       }
     });
 
-    homeButton.addEventListener("click", mostrarInicio);
+    function mostrarMenuPrincipal() {
+      tourFrame.removeAttribute("src");
+      renderizarListaProyectos();
+      loginScreen.style.display = "none";
+      tourScreen.style.display = "none";
+      projectsScreen.style.display = "flex";
+      window.history.replaceState({ pantalla: "proyectos" }, "", window.location.pathname);
+      window.scrollTo(0, 0);
+    }
+
+    homeButton.addEventListener("click", mostrarMenuPrincipal);
 
     window.addEventListener("popstate", function () {
       mostrarInicio();
